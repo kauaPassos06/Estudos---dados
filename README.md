@@ -14,8 +14,8 @@ Repositório de estudos para a área de Análise de Dados.
 - `banco_dasa.sql` — banco de dados temático para estudo
 
 ## Trilha de estudos
-- [x] SQL Server — básico ao avançado
-- [x] Python — básico ao avançado
+- [x] SQL Server — básico ao intermediario
+- [ ] Python — básico ao intermediario
 - [ ] Pandas
 - [ ] Power BI
 - [ ] Projeto completo
