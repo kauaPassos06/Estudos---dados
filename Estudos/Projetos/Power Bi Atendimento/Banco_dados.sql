@@ -1,0 +1,99 @@
+SELECT 
+    F.Turno,
+    COUNT(*) AS Total
+FROM Atendimentos A
+LEFT JOIN Funcionarios F ON A.FuncID = F.FuncID
+GROUP BY F.Turno
+
+USE Estudo
+
+-- DEPARTAMENTOS
+CREATE TABLE Departamentos (
+    DepID INT PRIMARY KEY IDENTITY(1,1),
+    Nome VARCHAR(50) NOT NULL,
+    Andar INT NOT NULL,
+    Gestor VARCHAR(100)
+);
+
+-- FUNCIONARIOS
+CREATE TABLE Funcionarios (
+    FuncID INT PRIMARY KEY IDENTITY(1,1),
+    Nome VARCHAR(100) NOT NULL,
+    Cargo VARCHAR(50) NOT NULL,
+    DepID INT FOREIGN KEY REFERENCES Departamentos(DepID),
+    Salario DECIMAL(10,2) NOT NULL,
+    DataAdmissao DATE NOT NULL,
+    Estado CHAR(2) NOT NULL,
+    Turno VARCHAR(10) NOT NULL,
+    Ativo BIT NOT NULL DEFAULT 1
+);
+
+-- PACIENTES
+CREATE TABLE Pacientes (
+    PacID INT PRIMARY KEY IDENTITY(1,1),
+    Nome VARCHAR(100) NOT NULL,
+    CPF CHAR(11) NOT NULL,
+    DataNascimento DATE NOT NULL,
+    Estado CHAR(2) NOT NULL,
+    Cidade VARCHAR(50) NOT NULL,
+    Plano VARCHAR(50) NOT NULL,
+    TipoPlano VARCHAR(20) NOT NULL,
+    DataCadastro DATE NOT NULL
+);
+
+-- MOTIVOS
+CREATE TABLE Motivos (
+    MotID INT PRIMARY KEY IDENTITY(1,1),
+    Descricao VARCHAR(100) NOT NULL,
+    Categoria VARCHAR(50) NOT NULL
+);
+
+-- ATENDIMENTOS
+CREATE TABLE Atendimentos (
+    AtendID INT PRIMARY KEY IDENTITY(1,1),
+    PacID INT FOREIGN KEY REFERENCES Pacientes(PacID),
+    FuncID INT FOREIGN KEY REFERENCES Funcionarios(FuncID),
+    DataAtendimento DATETIME NOT NULL,
+    Canal VARCHAR(20) NOT NULL,
+    TipoAtendimento VARCHAR(30) NOT NULL,
+    NotaCSAT INT NULL,
+    Duracao INT NOT NULL,
+    Transferido BIT NOT NULL DEFAULT 0,
+    Rechamada BIT NOT NULL DEFAULT 0,
+    Resolvido BIT NOT NULL DEFAULT 1
+);
+
+-- OCORRENCIAS
+CREATE TABLE Ocorrencias (
+    OcorID INT PRIMARY KEY IDENTITY(1,1),
+    AtendID INT FOREIGN KEY REFERENCES Atendimentos(AtendID),
+    FuncAnalista INT FOREIGN KEY REFERENCES Funcionarios(FuncID),
+    MotID INT FOREIGN KEY REFERENCES Motivos(MotID),
+    DataAbertura DATE NOT NULL,
+    DataFechamento DATE NULL,
+    Prazo INT NOT NULL,
+    SLACumprido BIT NULL,
+    Prioridade VARCHAR(10) NOT NULL,
+    Procedente VARCHAR(3) NOT NULL,
+    Descricao VARCHAR(300) NOT NULL
+);
+
+
+SELECT TABLE_NAME 
+FROM INFORMATION_SCHEMA.TABLES
+WHERE TABLE_TYPE = 'BASE TABLE'
+ORDER BY TABLE_NAME
+
+SELECT @@SERVERNAME
+
+SELECT 'Departamentos' AS Tabela, COUNT(*) AS Total FROM Departamentos
+UNION ALL
+SELECT 'Funcionarios', COUNT(*) FROM Funcionarios
+UNION ALL
+SELECT 'Pacientes', COUNT(*) FROM Pacientes
+UNION ALL
+SELECT 'Motivos', COUNT(*) FROM Motivos
+UNION ALL
+SELECT 'Atendimentos', COUNT(*) FROM Atendimentos
+UNION ALL
+SELECT 'Ocorrencias', COUNT(*) FROM Ocorrencias
